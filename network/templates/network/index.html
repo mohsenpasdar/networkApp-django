@@ -1,0 +1,23 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    <h1>All Posts</h1>
+
+    <div class="new-post">
+    <h2>New Post</h2>
+    <form method="POST" action="{% url 'new_post' %}">
+        {% csrf_token %}
+        <textarea name="content" cols="30" rows="5" placeholder="Write a new post"></textarea>
+        <button type="submit">Submit</button>
+    </form>
+    </div>
+
+    {% for post in posts %}
+        <div class="post">
+            <p>{{ post.content }}</p>
+            <p>Posted by {{ post.user.username }} at {{ post.timestamp }}</p>
+            <p>Likes: {{ post.likes.count }}</p>
+            <a href="{% url 'post_detail' post.id %}">View</a>
+        </div>
+    {% endfor %}
+{% endblock %}
