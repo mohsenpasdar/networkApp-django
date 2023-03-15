@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from .models import Post
@@ -78,3 +78,23 @@ def new_post(request):
     return redirect('index')
 
 
+def profile(request, username):
+    # Get the User object for the given username, or return a 404 error if not found
+    user = get_object_or_404(User, username=username)
+
+    # Get the number of followers for the user
+    num_followers = user.followers.count()
+
+    # Get the number of people that the user follows
+    num_following = user.following.count()
+
+    # Get all the posts for the user, in reverse chronological order
+    posts = user.posts.order_by('-timestamp').all()
+
+    # Render the profile template with the user's information and posts
+    return render(request, 'network/profile.html', {
+        'viewed_user': user,
+        'num_followers': num_followers,
+        'num_following': num_following,
+        'posts': posts,
+    })

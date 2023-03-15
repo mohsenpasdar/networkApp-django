@@ -1,24 +1,31 @@
 {% extends "network/layout.html" %}
-{% load static %}
 
 {% block body %}
-    <h1 style="padding-left: 10px;">All Posts</h1>
+    <h1>{{ viewed_user.username }}</h1>
 
-    {% if request.user.is_authenticated %}
-        <div class="new-post">
-            <h2>New Post</h2>
-            <form method="POST" action="{% url 'new_post' %}">
+    <div class="profile-info">
+        <p>Followers: {{ num_followers }}</p>
+        <p>Following: {{ num_following }}</p>
+    </div>
+
+    {% if request.user.is_authenticated and request.user != viewed_user %}
+        {% if request.user in user.followers.all %}
+            <form method="POST">
                 {% csrf_token %}
-                <textarea name="content" cols="30" rows="3"></textarea>
-                <button type="submit">Post</button>
+                <button type="submit">Unfollow</button>
             </form>
-        </div>
+        {% else %}
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit">Follow</button>
+            </form>
+        {% endif %}
     {% endif %}
 
     {% for post in posts %}
         <div class="post-container">
             <div class="post-header">
-                <span class="post-username"><a href="{% url 'profile' username=post.user.username %}">{{ post.user.username }}</a></span>
+                <span class="post-username"><a href="{% url 'profile' post.user.username %}">{{ post.user.username }}</a></span>
             </div>
             <div class="post-content">
                 <p>{{ post.content }}</p>
@@ -32,18 +39,8 @@
                     {{ post.num_likes }}
                 </span>
             </div>
-            <div class="post-link">
-                <a href="#">View post</a>
-            </div>
         </div>
     {% empty %}
         <p>No posts yet.</p>
     {% endfor %}
 {% endblock %}
-
-{% block script %}
-    <script src="{% static 'network/js.js' %}"></script>        
-{% endblock %}
-        
-        
-
