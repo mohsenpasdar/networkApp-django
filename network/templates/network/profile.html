@@ -9,13 +9,13 @@
     </div>
 
     {% if request.user.is_authenticated and request.user != viewed_user %}
-        {% if request.user in user.followers.all %}
-            <form method="POST">
+        {% if request.user in viewed_user.followers.all %}
+            <form method="POST" action="{% url 'unfollow' viewed_user.username %}">
                 {% csrf_token %}
                 <button type="submit">Unfollow</button>
             </form>
         {% else %}
-            <form method="POST">
+            <form method="POST" action="{% url 'follow' viewed_user.username %}">
                 {% csrf_token %}
                 <button type="submit">Follow</button>
             </form>

@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from .models import Post
+from django.http import JsonResponse
 
 
 from .models import User
@@ -98,3 +99,26 @@ def profile(request, username):
         'num_following': num_following,
         'posts': posts,
     })
+
+
+@login_required
+def follow(request, username):
+    """
+    View for following a user.
+    """
+    user = get_object_or_404(User, username=username)
+    if request.user != user:
+        request.user.following.add(user)
+        return JsonResponse({'status': 'ok'})
+    return JsonResponse({'status': 'error', 'error_message': 'Cannot follow yourself.'})
+
+@login_required
+def unfollow(request, username):
+    """
+    View for unfollowing a user.
+    """
+    user = get_object_or_404(User, username=username)
+    if request.user != user:
+        request.user.following.remove(user)
+        return JsonResponse({'status': 'ok'})
+    return JsonResponse({'status': 'error', 'error_message': 'Cannot unfollow yourself.'})
