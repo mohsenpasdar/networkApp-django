@@ -39,3 +39,45 @@
 .new-post button[type="submit"]:hover {
     background-color: #0c85d0;
 }
+
+.post-container {
+    background-color: #fff;
+    border: 1px solid #dddfe2;
+    border-radius: 12px;
+    padding: 15px;
+    margin: 20px 10px 20px 10px;
+    padding-bottom: 5px;
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+}
+
+.post-username {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.post-timestamp {
+    font-size: 12px;
+    color: gray;
+}
+
+.post-content {
+    margin-top: 10px;
+}
+
+.post-likes {
+    margin-top: 10px;
+    color: gray;
+}
+
+.post-link {
+    color: blue;
+    font-size: 12px;
+}
+
+.liked [id^="heart-icon-"] path {
+    fill: red;
+}

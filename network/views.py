@@ -11,7 +11,8 @@ from .models import User
 
 
 def index(request):
-    return render(request, "network/index.html")
+    posts = Post.objects.order_by('-timestamp').all()
+    return render(request, "network/index.html", {'posts': posts})
 
 
 def login_view(request):
@@ -75,3 +76,5 @@ def new_post(request):
             post.save()
             return redirect('index')
     return redirect('index')
+
+
