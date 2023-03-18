@@ -109,7 +109,7 @@ def follow(request, username):
     user = get_object_or_404(User, username=username)
     if request.user != user:
         request.user.following.add(user)
-        return JsonResponse({'status': 'ok'})
+        return redirect(request.META.get('HTTP_REFERER', 'profiles'))
     return JsonResponse({'status': 'error', 'error_message': 'Cannot follow yourself.'})
 
 @login_required
@@ -120,5 +120,5 @@ def unfollow(request, username):
     user = get_object_or_404(User, username=username)
     if request.user != user:
         request.user.following.remove(user)
-        return JsonResponse({'status': 'ok'})
+        return redirect(request.META.get('HTTP_REFERER', 'profiles'))
     return JsonResponse({'status': 'error', 'error_message': 'Cannot unfollow yourself.'})
