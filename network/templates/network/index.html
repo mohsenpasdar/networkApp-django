@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block body %}
-    <h1 style="padding-left: 10px;">All Posts</h1>
+    <h1 style="padding-left: 10px;">{{ header }}</h1>
 
     {% if request.user.is_authenticated %}
         <div class="new-post">

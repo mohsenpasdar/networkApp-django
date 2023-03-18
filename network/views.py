@@ -14,7 +14,7 @@ from .models import User
 
 def index(request):
     posts = Post.objects.order_by('-timestamp').all()
-    return render(request, "network/index.html", {'posts': posts})
+    return render(request, "network/index.html", {'posts': posts, 'header': 'All Posts'})
 
 
 def login_view(request):
@@ -128,3 +128,16 @@ def unfollow(request, username):
         num_followers = user.followers.count()
         return JsonResponse({'status': 'ok', 'num_followers': num_followers}, status=201)
     return JsonResponse({'status': 'error', 'error_message': 'Cannot unfollow yourself.'}, status=401)
+
+
+@login_required
+def following(request):
+    # Get all posts made by users that the current user follows
+    following = request.user.following.all()
+    posts = Post.objects.filter(user__in=following).order_by('-timestamp')
+
+    # Render the template for the following page with the posts and user information
+    return render(request, "network/index.html", {
+        "posts": posts,
+        'header': 'Posts from People You Follow'
+    })

@@ -2,9 +2,9 @@
 {% load static %}
 
 {% block body %}
-    <h1>{{ viewed_user.username }}</h1>
+    <h1 style="padding-left: 10px;">{{ viewed_user.username }}</h1>
 
-    <div class="profile-info">
+    <div style="padding-left: 20px;" class="profile-info">
         <p>Followers: {{ num_followers }}</p>
         <p>Following: {{ num_following }}</p>
     </div>
@@ -46,5 +46,5 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'network/js.js' %}"></script>        
+    <script src="{% static 'network/followForm.js' %}"></script>        
 {% endblock %}
