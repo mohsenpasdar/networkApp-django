@@ -10,17 +10,16 @@
     </div>
 
     {% if request.user.is_authenticated and request.user != viewed_user %}
-        {% if request.user in viewed_user.followers.all %}
-            <form id="unfollow-form" data-viewed-user-username="{{ viewed_user.username }}">
-                {% csrf_token %}
-                <button type="submit">Unfollow</button>
-            </form>
-        {% else %}
-            <form id="follow-form" data-viewed-user-username="{{ viewed_user.username }}">
-                {% csrf_token %}
-                <button type="submit">Follow</button>
-            </form>
-        {% endif %}
+        <form id="follow-form" data-viewed-user-username="{{ viewed_user.username }}">
+            {% csrf_token %}
+            <button type="submit" id="follow-btn">
+                {% if request.user in viewed_user.followers.all %}
+                    Unfollow
+                {% else %}
+                    Follow
+                {% endif %}
+            </button>
+        </form>
     {% endif %}
 
     {% for post in posts %}
