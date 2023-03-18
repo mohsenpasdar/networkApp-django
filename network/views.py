@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from .models import Post
 from django.http import JsonResponse
 
@@ -101,6 +102,7 @@ def profile(request, username):
     })
 
 
+@csrf_exempt
 @login_required
 def follow(request, username):
     """
@@ -109,9 +111,12 @@ def follow(request, username):
     user = get_object_or_404(User, username=username)
     if request.user != user:
         request.user.following.add(user)
-        return redirect(request.META.get('HTTP_REFERER', 'profiles'))
-    return JsonResponse({'status': 'error', 'error_message': 'Cannot follow yourself.'})
+        num_followers = user.followers.count()
+        return JsonResponse({'status': 'ok', 'num_followers': num_followers}, status=201)
+    return JsonResponse({'status': 'error', 'error_message': 'Cannot follow yourself.'}, status=401)
 
+
+@csrf_exempt
 @login_required
 def unfollow(request, username):
     """
@@ -120,5 +125,6 @@ def unfollow(request, username):
     user = get_object_or_404(User, username=username)
     if request.user != user:
         request.user.following.remove(user)
-        return redirect(request.META.get('HTTP_REFERER', 'profiles'))
-    return JsonResponse({'status': 'error', 'error_message': 'Cannot unfollow yourself.'})
+        num_followers = user.followers.count()
+        return JsonResponse({'status': 'ok', 'num_followers': num_followers}, status=201)
+    return JsonResponse({'status': 'error', 'error_message': 'Cannot unfollow yourself.'}, status=401)

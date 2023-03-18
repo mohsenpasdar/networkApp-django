@@ -1,4 +1,5 @@
 {% extends "network/layout.html" %}
+{% load static %}
 
 {% block body %}
     <h1>{{ viewed_user.username }}</h1>
@@ -10,12 +11,12 @@
 
     {% if request.user.is_authenticated and request.user != viewed_user %}
         {% if request.user in viewed_user.followers.all %}
-            <form method="POST" action="{% url 'unfollow' viewed_user.username %}">
+            <form id="unfollow-form" data-viewed-user-username="{{ viewed_user.username }}">
                 {% csrf_token %}
                 <button type="submit">Unfollow</button>
             </form>
         {% else %}
-            <form method="POST" action="{% url 'follow' viewed_user.username %}">
+            <form id="follow-form" data-viewed-user-username="{{ viewed_user.username }}">
                 {% csrf_token %}
                 <button type="submit">Follow</button>
             </form>
@@ -43,4 +44,8 @@
     {% empty %}
         <p>No posts yet.</p>
     {% endfor %}
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/js.js' %}"></script>        
 {% endblock %}
