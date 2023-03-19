@@ -168,3 +168,7 @@ def unlike_post(request):
             like.delete()
         num_likes = post.likes.count()
         return JsonResponse({'num_likes': num_likes}, status=201)
+
+
+def edit_post(request, post_id):
+    pass
