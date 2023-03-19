@@ -22,27 +22,7 @@
         </form>
     {% endif %}
 
-    {% for post in posts %}
-        <div class="post-container">
-            <div class="post-header">
-                <span class="post-username"><a href="{% url 'profile' post.user.username %}">{{ post.user.username }}</a></span>
-            </div>
-            <div class="post-content">
-                <p>{{ post.content }}</p>
-            </div>
-            <span class="post-timestamp">{{ post.timestamp|date:'F d, Y H:i' }}</span>
-            <div class="post-likes">
-                <span>
-                    <svg id="heart-icon-{{ post.id }}" data-post-id="{{ post.id }}" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                        <path fill="{% if request.user in post.likers.all %}red{% else %}gray{% endif %}" d="M12 21.35l-1.9-1.71C4.69 14.51 2 12.11 2 8.82 2 6.26 3.95 4.2 6.5 4.2c1.74 0 3.35.82 4.5 2.12C12.15 5.02 13.76 4.2 15.5 4.2c2.55 0 4.5 2.06 4.5 4.62 0 3.29-2.69 5.69-8.1 11.82L12 21.35z"/>
-                    </svg>
-                    <span id="num-likes-{{ post.id }}">{{ post.num_likes }}</span>
-                </span>
-            </div>
-        </div>
-    {% empty %}
-        <p>No posts yet.</p>
-    {% endfor %}
+    {% include 'network/_post.html'%}
 {% endblock %}
 
 {% block script %}
