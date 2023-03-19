@@ -5,8 +5,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from .models import Post
+from .models import Post, Like
 from django.http import JsonResponse
+import json
 
 
 from .models import User
@@ -141,3 +142,29 @@ def following(request):
         "posts": posts,
         'header': 'Posts from People You Follow'
     })
+
+@csrf_exempt
+@login_required
+def like_post(request):
+    print(request.method)
+    if request.method == 'POST':
+        body = json.loads(request.body)
+        post_id = body['post_id']
+        post = Post.objects.get(id=post_id)
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
+        if not created:
+            like.delete()
+        num_likes = post.likes.count()
+        return JsonResponse({'num_likes': num_likes}, status=201)
+@csrf_exempt
+@login_required
+def unlike_post(request):
+    if request.method == 'POST':
+        body = json.loads(request.body)
+        post_id = body['post_id']
+        post = Post.objects.get(id=post_id)
+        like = Like.objects.filter(user=request.user, post=post)
+        if like.exists():
+            like.delete()
+        num_likes = post.likes.count()
+        return JsonResponse({'num_likes': num_likes}, status=201)

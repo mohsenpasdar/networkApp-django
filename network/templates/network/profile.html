@@ -10,7 +10,7 @@
     </div>
 
     {% if request.user.is_authenticated and request.user != viewed_user %}
-        <form id="follow-form" data-viewed-user-username="{{ viewed_user.username }}">
+        <form id="follow-form" style="padding-left: 20px;" data-viewed-user-username="{{ viewed_user.username }}">
             {% csrf_token %}
             <button type="submit" id="follow-btn">
                 {% if request.user in viewed_user.followers.all %}
@@ -33,10 +33,10 @@
             <span class="post-timestamp">{{ post.timestamp|date:'F d, Y H:i' }}</span>
             <div class="post-likes">
                 <span>
-                    <svg id="heart-icon-{{ post.id }}" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                        <path fill="gray" d="M12 21.35l-1.9-1.71C4.69 14.51 2 12.11 2 8.82 2 6.26 3.95 4.2 6.5 4.2c1.74 0 3.35.82 4.5 2.12C12.15 5.02 13.76 4.2 15.5 4.2c2.55 0 4.5 2.06 4.5 4.62 0 3.29-2.69 5.69-8.1 11.82L12 21.35z"/>
+                    <svg id="heart-icon-{{ post.id }}" data-post-id="{{ post.id }}" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path fill="{% if request.user in post.likers.all %}red{% else %}gray{% endif %}" d="M12 21.35l-1.9-1.71C4.69 14.51 2 12.11 2 8.82 2 6.26 3.95 4.2 6.5 4.2c1.74 0 3.35.82 4.5 2.12C12.15 5.02 13.76 4.2 15.5 4.2c2.55 0 4.5 2.06 4.5 4.62 0 3.29-2.69 5.69-8.1 11.82L12 21.35z"/>
                     </svg>
-                    {{ post.num_likes }}
+                    <span id="num-likes-{{ post.id }}">{{ post.num_likes }}</span>
                 </span>
             </div>
         </div>
@@ -46,5 +46,5 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'network/followForm.js' %}"></script>        
+    <script src="{% static 'network/js.js' %}"></script>        
 {% endblock %}
